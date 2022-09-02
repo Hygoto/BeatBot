@@ -12,9 +12,9 @@ client.on("ready", async() =>
 client.on("message", async (message) => {
     const command = message.content.split(/ /);
     if (command[0] === config.keyword) {
+        await db.read();
         const revoltid = message.author_id;
         let id;
-        db.read();
         try {
             for (let index = 0; index < db.data.users.length+1; index++) {
                 if (revoltid == db.data.users[index].revolt) {
