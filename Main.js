@@ -59,6 +59,10 @@ client.on("message", async (message) => {
                     case "register":
                         message.channel.sendMessage('You are already registered.')
                     break;
+
+                    case "help":
+                        message.channel.sendMessage(`**commands**\n${config.keyword} recentsong\n${config.keyword} topsong\n${config.keyword} recentsongs\n${config.keyword} topsongs`);
+                    break;
                 }
             }
             catch (error) {
@@ -72,21 +76,23 @@ async function recentsong(id, command) {
     if (command.length > 2) {page = command[2];}
     else {page = 1;};
     const score = await getJSON(`https://scoresaber.com/api/player/${id}/scores?limit=1&sort=recent&page=${page}&withMetadata=false`);
-    const map = await getJSON('https://api.beatsaver.com/maps/hash/'+score.playerScores[0].leaderboard.songHash);
+    const hash = score.playerScores[0].leaderboard.songHash;
+    const map = await getJSON('https://api.beatsaver.com/maps/hash/'+hash);
     const diff = score.playerScores[0].leaderboard.difficulty.difficultyRaw.split(/_/);
-    const diffPos = getDiffPos(diff, map);
-    if (score.playerScores[0].leaderboard.ranked) return `Song: ${score.playerScores[0].leaderboard.songName}\nRank: ${score.playerScores[0].score.rank}\nScore: ${score.playerScores[0].score.baseScore}\nAcc: ${(score.playerScores[0].score.baseScore/map.versions[0].diffs[diffPos].maxScore*100).toFixed(2)}\npp: ${score.playerScores[0].score.pp}`;
-    else return `Song: ${score.playerScores[0].leaderboard.songName}\nRank: ${score.playerScores[0].score.rank}\nScore: ${score.playerScores[0].score.baseScore}\nAcc: ${(score.playerScores[0].score.baseScore/map.versions[0].diffs[diffPos].maxScore*100).toFixed(2)}`;
+    const diffPos = getDiffPos(hash, diff, map);
+    if (score.playerScores[0].leaderboard.ranked) return `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\nRank: ${score.playerScores[0].score.rank}\nScore: ${score.playerScores[0].score.baseScore}\nAcc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\npp: ${score.playerScores[0].score.pp}`;
+    else return `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\nRank: ${score.playerScores[0].score.rank}\nScore: ${score.playerScores[0].score.baseScore}\nAcc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}`;
 }
 async function topsong(id, command) {
     let page;
     if (command.length > 2) {page = command[2];}
     else {page = 1;};
     const score = await getJSON(`https://scoresaber.com/api/player/${id}/scores?limit=1&sort=top&page=${page}&withMetadata=false`);
-    const map = await getJSON('https://api.beatsaver.com/maps/hash/'+score.playerScores[0].leaderboard.songHash);
+    const hash = score.playerScores[0].leaderboard.songHash;
+    const map = await getJSON('https://api.beatsaver.com/maps/hash/'+hash);
     const diff = score.playerScores[0].leaderboard.difficulty.difficultyRaw.split(/_/);
-    const diffPos =  getDiffPos(diff, map);
-    return `Song: ${score.playerScores[0].leaderboard.songName}\nRank: ${score.playerScores[0].score.rank}\nScore: ${score.playerScores[0].score.baseScore}\nAcc: ${(score.playerScores[0].score.baseScore/map.versions[0].diffs[diffPos].maxScore*100).toFixed(2)}\npp: ${score.playerScores[0].score.pp}`;
+    const diffPos =  getDiffPos(hash, diff, map);
+    return `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\nRank: ${score.playerScores[0].score.rank}\nScore: ${score.playerScores[0].score.baseScore}\nAcc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\npp: ${score.playerScores[0].score.pp}`;
 }
 async function recentsongs(id, command) {
     let page;
@@ -95,14 +101,15 @@ async function recentsongs(id, command) {
     else {page = 1;};
     const score = await getJSON(`https://scoresaber.com/api/player/${id}/scores?limit=8&sort=recent&page=${page}&withMetadata=false`);
     for (let index = 0; index < 8; index++) {
-        const map = await getJSON('https://api.beatsaver.com/maps/hash/'+score.playerScores[index].leaderboard.songHash);
+        const hash = score.playerScores[index].leaderboard.songHash;
+        const map = await getJSON('https://api.beatsaver.com/maps/hash/'+hash);
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
-        const diffPos = getDiffPos(diff, map);
+        const diffPos = getDiffPos(hash, diff, map);
         if (score.playerScores[index].leaderboard.ranked) {
-            response += `\nSong: ${score.playerScores[index].leaderboard.songName}\nRank: ${score.playerScores[index].score.rank}\nScore: ${score.playerScores[index].score.baseScore}\nAcc: ${(score.playerScores[index].score.baseScore/map.versions[0].diffs[diffPos].maxScore*100).toFixed(2)}\npp: ${score.playerScores[index].score.pp}`;
+            response += `\nSong: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\nRank: ${score.playerScores[index].score.rank}\nScore: ${score.playerScores[index].score.baseScore}\nAcc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\npp: ${score.playerScores[index].score.pp}`;
         }
         else {
-            response += `\nSong: ${score.playerScores[index].leaderboard.songName}\nRank: ${score.playerScores[index].score.rank}\nScore: ${score.playerScores[index].score.baseScore}\nAcc: ${(score.playerScores[index].score.baseScore/map.versions[0].diffs[diffPos].maxScore*100).toFixed(2)}`;
+            response += `\nSong: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\nRank: ${score.playerScores[index].score.rank}\nScore: ${score.playerScores[index].score.baseScore}\nAcc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}`;
         }
     }
     return response;
@@ -114,16 +121,17 @@ async function topsongs(id, command) {
     else {page = 1;};
     const score = await getJSON(`https://scoresaber.com/api/player/${id}/scores?limit=8&sort=top&page=${page}&withMetadata=false`);
     for (let index = 0; index < 8; index++) {
-        const map = await getJSON('https://api.beatsaver.com/maps/hash/'+score.playerScores[index].leaderboard.songHash);
+        const hash = score.playerScores[index].leaderboard.songHash;
+        const map = await getJSON('https://api.beatsaver.com/maps/hash/'+hash);
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
-        const diffPos = getDiffPos(diff, map);
-        response += `\nSong: ${score.playerScores[index].leaderboard.songName}\nRank: ${score.playerScores[index].score.rank}\nScore: ${score.playerScores[index].score.baseScore}\nAcc: ${(score.playerScores[index].score.baseScore/map.versions[0].diffs[diffPos].maxScore*100).toFixed(2)}\npp: ${score.playerScores[index].score.pp}`;
+        const diffPos = getDiffPos(hash, diff, map);
+        response += `\nSong: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\nRank: ${score.playerScores[index].score.rank}\nScore: ${score.playerScores[index].score.baseScore}\nAcc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\npp: ${score.playerScores[index].score.pp}`;
     }
     return response;
 }
 async function register(revoltid, id) {
     try {
-        await db.read();
+        db.read();
         const player = await getJSON(`https://scoresaber.com/api/player/${id}/basic`);
         const name = player.name;
         db.data.users.push({revolt: revoltid, scoresaber: id});
@@ -134,10 +142,13 @@ async function register(revoltid, id) {
         return 'Invalid profile'
     }
 }
-function getDiffPos(diff, map) {
-    let diffPos = 0;
-    for (let index = 0; map.versions[0].diffs[index].difficulty != diff[1]; index++) {
-        diffPos = index+1;   
+function getDiffPos(hash, diff, map) {
+    let diffPos = [0, 0];
+    for (let index = 0; map.versions[index].hash != hash.toLowerCase(); index++) {
+        diffPos[0] = index+1;
+    }
+    for (let index = 0; map.versions[diffPos[0]].diffs[index].difficulty != diff[1] || `Solo${map.versions[diffPos[0]].diffs[index].characteristic}` != diff[2]; index++) {
+        diffPos[1] = index+1;   
     }
     return diffPos;
 }
