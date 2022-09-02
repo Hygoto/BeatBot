@@ -123,7 +123,7 @@ async function topsongs(id, command) {
 }
 async function register(revoltid, id) {
     try {
-        db.read();
+        await db.read();
         const player = await getJSON(`https://scoresaber.com/api/player/${id}/basic`);
         const name = player.name;
         db.data.users.push({revolt: revoltid, scoresaber: id});
