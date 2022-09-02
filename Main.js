@@ -34,30 +34,35 @@ client.on("message", async (message) => {
             else message.channel.sendMessage(`You are not registered. You can register with ${config.keyword} register *scoresaberID*.`)
         }
         else {
-            switch (command[1]) {
-                case "recentsong":
-                    response = await recentsong(id, command);
-                    message.channel.sendMessage(response);
-                break;
-    
-                case "topsong":
-                    response = await topsong(id, command);
-                    message.channel.sendMessage(response);
-                break;
-    
-                case "recentsongs":
-                    response = await recentsongs(id, command);
-                    message.channel.sendMessage(response);
-                break;
-    
-                case "topsongs":
-                    response = await topsongs(id, command);
-                    message.channel.sendMessage(response);
-                break;
-    
-                case "register":
-                    message.channel.sendMessage('You are already registered.')
-                break;
+            try {
+                switch (command[1]) {
+                    case "recentsong":
+                        response = await recentsong(id, command);
+                        message.channel.sendMessage(response);
+                    break;
+        
+                    case "topsong":
+                        response = await topsong(id, command);
+                        message.channel.sendMessage(response);
+                    break;
+        
+                    case "recentsongs":
+                        response = await recentsongs(id, command);
+                        message.channel.sendMessage(response);
+                    break;
+        
+                    case "topsongs":
+                        response = await topsongs(id, command);
+                        message.channel.sendMessage(response);
+                    break;
+        
+                    case "register":
+                        message.channel.sendMessage('You are already registered.')
+                    break;
+                }
+            }
+            catch (error) {
+                message.channel.sendMessage('Something went wrong.');
             }
         }
     }
