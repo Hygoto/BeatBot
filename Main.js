@@ -133,13 +133,15 @@ async function register(revoltid, id) {
     try {
         db.read();
         const player = await getJSON(`https://scoresaber.com/api/player/${id}/basic`);
-        const name = player.name;
-        db.data.users.push({revolt: revoltid, scoresaber: id});
-        db.write();
-        return `You are now registered as ${name}`;
+        if (player.id == id) {
+            db.data.users.push({revolt: revoltid, scoresaber: id});
+            db.write();
+            return `You are now registered as ${player.name}`; 
+        }
+        else return 'Invalid profile';
     }
     catch (error) {
-        return 'Invalid profile'
+        return 'Invalid profile';
     }
 }
 function getDiffPos(hash, diff, map) {
