@@ -59,11 +59,11 @@ async function messageRecieved(message) {
 
                     case "help":
                         message.channel.sendMessage(
-                            `**commands**\n\
-                            ${config.keyword} recentsong\n\
-                            ${config.keyword} topsong\n\
-                            ${config.keyword} recentsongs\n\
-                            ${config.keyword} topsongs`);
+                            `**commands**\n` +
+                            `${config.keyword} recentsong\n` +
+                            `${config.keyword} topsong\n` +
+                            `${config.keyword} recentsongs\n` +
+                            `${config.keyword} topsongs`);
                     break;
                 }
             }
@@ -85,19 +85,19 @@ async function recentsong(id, command) {
     const diffPos = getDiffPos(hash, diff, map);
     if (score.playerScores[0].leaderboard.ranked) {
         return (
-            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n\
-            Rank: ${score.playerScores[0].score.rank}\n\
-            Score: ${score.playerScores[0].score.baseScore}\n\
-            Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n\
-            pp: ${score.playerScores[0].score.pp}`
+            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+            `Rank: ${score.playerScores[0].score.rank}\n` +
+            `Score: ${score.playerScores[0].score.baseScore}\n` +
+            `Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n` +
+            `pp: ${score.playerScores[0].score.pp}`
         );
     }
     else {
         return (
-            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n\
-            Rank: ${score.playerScores[0].score.rank}\n\
-            Score: ${score.playerScores[0].score.baseScore}\n\
-            Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}`
+            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+            `Rank: ${score.playerScores[0].score.rank}\n` +
+            `Score: ${score.playerScores[0].score.baseScore}\n` +
+            `Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}`
         );
     }
 }
@@ -112,11 +112,11 @@ async function topsong(id, command) {
     const diff = score.playerScores[0].leaderboard.difficulty.difficultyRaw.split(/_/);
     const diffPos =  getDiffPos(hash, diff, map);
     return (
-        `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n\
-        Rank: ${score.playerScores[0].score.rank}\n\
-        Score: ${score.playerScores[0].score.baseScore}\n\
-        Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n\
-        pp: ${score.playerScores[0].score.pp}`
+        `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+        `Rank: ${score.playerScores[0].score.rank}\n` +
+        `Score: ${score.playerScores[0].score.baseScore}\n` +
+        `Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n` +
+        `pp: ${score.playerScores[0].score.pp}`
     );
 }
 
@@ -132,19 +132,19 @@ async function recentsongs(id, command) {
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
         const diffPos = getDiffPos(hash, diff, map);
         if (score.playerScores[index].leaderboard.ranked) {
-            response += `\n\
-                Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n\
-                Rank: ${score.playerScores[index].score.rank}\n\
-                Score: ${score.playerScores[index].score.baseScore}\n\
-                Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n\
-                pp: ${score.playerScores[index].score.pp}`;
+            response += `\n` +
+                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+                `Rank: ${score.playerScores[index].score.rank}\n` +
+                `Score: ${score.playerScores[index].score.baseScore}\n` +
+                `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n` +
+                `pp: ${score.playerScores[index].score.pp}`;
         }
         else {
-            response += `\n\
-                Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n\
-                Rank: ${score.playerScores[index].score.rank}\n\
-                Score: ${score.playerScores[index].score.baseScore}\n\
-                Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}`;
+            response += `\n` +
+                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+                `Rank: ${score.playerScores[index].score.rank}\n` +
+                `Score: ${score.playerScores[index].score.baseScore}\n` +
+                `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}`;
         }
     }
     return response;
@@ -162,12 +162,12 @@ async function topsongs(id, command) {
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
         const diffPos = getDiffPos(hash, diff, map);
         response += (
-            `\n\
-            Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n\
-            Rank: ${score.playerScores[index].score.rank}\n\
-            Score: ${score.playerScores[index].score.baseScore}\n\
-            Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n\
-            pp: ${score.playerScores[index].score.pp}`
+            `\n` +
+            `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+            `Rank: ${score.playerScores[index].score.rank}\n` +
+            `Score: ${score.playerScores[index].score.baseScore}\n` +
+            `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n` +
+            `pp: ${score.playerScores[index].score.pp}`
         );
     }
     return response;
