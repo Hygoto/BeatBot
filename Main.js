@@ -190,10 +190,10 @@ async function register(revoltid, id) {
 
 function getDiffPos(hash, diff, map) {
     let diffPos = [0, 0];
-    diffPos[0] = map.versions.findIndex((value) => (value.hash !== hash.toLowerCase())) + 1;
+    diffPos[0] = map.versions.findIndex((value) => (value.hash === hash.toLowerCase()));
     diffPos[1] = map.versions[diffPos[0]].diffs.findIndex(
-        (value) => (value.difficulty !== diff[1] || `Solo${value.characteristic}` !== diff[2])
-    ) + 1;
+        (value) => (value.difficulty === diff[1] && `Solo${value.characteristic}` === diff[2])
+    );
     return diffPos;
 }
 
