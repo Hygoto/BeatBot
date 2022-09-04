@@ -161,14 +161,13 @@ async function topsongs(id, command) {
         const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+hash);
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
         const diffPos = getDiffPos(hash, diff, map);
-        response += (
+        response +=
             `\n` +
             `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
             `Rank: ${score.playerScores[index].score.rank}\n` +
             `Score: ${score.playerScores[index].score.baseScore}\n` +
             `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}\n` +
-            `pp: ${score.playerScores[index].score.pp}`
-        );
+            `pp: ${score.playerScores[index].score.pp}`;
     }
     return response;
 }
@@ -191,10 +190,10 @@ async function register(revoltid, id) {
 
 function getDiffPos(hash, diff, map) {
     let diffPos = [0, 0];
-    diffPos[0] = map.versions.findIndex((value) => value.hash !== hash.toLowerCase()) + 1;
+    diffPos[0] = map.versions.findIndex((value) => (value.hash !== hash.toLowerCase())) + 1;
     diffPos[1] = map.versions[diffPos[0]].diffs.findIndex(
-        (value) => value.difficulty !== diff[1] || `Solo${value.characteristic}` !== diff[2]
-    );
+        (value) => (value.difficulty !== diff[1] || `Solo${value.characteristic}` !== diff[2])
+    ) + 1;
     return diffPos;
 }
 
