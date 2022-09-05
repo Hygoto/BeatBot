@@ -63,13 +63,19 @@ async function messageRecieved(message) {
                         message.channel.sendMessage('You are already registered.')
                     break;
 
+                    case "unregister":
+                        response = await unregister(revoltid);
+                        message.channel.sendMessage(response);
+                    break;
+
                     case "help":
                         message.channel.sendMessage(
                             `**commands**\n` +
                             `${config.keyword} recentsong\n` +
                             `${config.keyword} topsong\n` +
                             `${config.keyword} recentsongs\n` +
-                            `${config.keyword} topsongs`);
+                            `${config.keyword} topsongs` +
+                            `${config.keyword} unregister`);
                     break;
 
                     default:
@@ -198,6 +204,14 @@ async function register(revoltid, id) {
     catch (error) {
         return 'Invalid profile';
     }
+}
+
+async function unregister(revoltid) {
+    await db.read();
+    const index = db.data.users.findIndex((value) => (value.revolt === revoltid));
+    db.data.users.splice(index, 1);
+    db.write();
+    return 'Your profile has been deleted.';
 }
 
 function getDiffPos(hash, diff, map) {
