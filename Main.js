@@ -65,6 +65,12 @@ async function messageRecieved(message) {
                             `${config.keyword} recentsongs\n` +
                             `${config.keyword} topsongs`);
                     break;
+
+                    default:
+                        message.channel.sendMessage(
+                            `Invalid command. \
+                            You can use *${config.keyword} help* to get a list of commands.`);
+                    break;
                 }
             }
             catch (error) {
