@@ -11,7 +11,13 @@ client.on("ready", async() =>
 client.on("message", messageRecieved);
 
 async function messageRecieved(message) {
-    const command = message.content.split(/ /);
+    let command;
+    if (message.content === null) {
+        command = config.keyword+'a';
+    }
+    else {
+        command = message.content.split(/ /);
+    }
     if (command[0] === config.keyword) {
         await db.read();
         const revoltid = message.author_id;
