@@ -4,6 +4,11 @@ import config from './config.json' assert {type:'json'};
 
 let client = new Client();
 const db = new Low(new JSONFile('./db.json'));
+await db.read();
+if (db.data === -1) {
+    db.data = {"users": []}
+    await db.write();
+}
 
 client.on("ready", async() =>
     console.info(`Logged in as ${client.user.username}!`),

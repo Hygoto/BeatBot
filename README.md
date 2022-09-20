@@ -3,8 +3,7 @@ very WIP
 
 ### usage
 1. Put your bot token in "configExample.json" and rename it to "config.json".
-2. Rename "dbTemplate.json" to "db.json".
-3. Start Main.js
+2. Start Main.js
 
 ### dependencies:
 - revolt.js
