@@ -30,69 +30,64 @@ async function messageRecieved(message) {
 
         id = (db.data.users.find((user) => user.revolt === revoltid) ?? {scoresaber: -1}).scoresaber
         let response;
+        let registered = true;
         if (id === -1) {
-            if (command[1] === 'register') {
-                response = await register(revoltid, command[2]);
-                message.channel.sendMessage(response);
-            }
-            else {
-                message.channel.sendMessage(
-                    `You are not registered. \
-                    You can register with ${config.keyword} register *scoresaberID*.`);
+            registered = false;
+            response = `You are not registered. \
+            You can register with ${config.keyword} register *scoresaberID*.`;
+        }
+        try {
+            switch (command[1]) {
+                case "recentsong":
+                    if (registered) response = await recentsong(id, command);
+                    message.channel.sendMessage(response);
+                break;
+    
+                case "topsong":
+                    if (registered) response = await topsong(id, command);
+                    message.channel.sendMessage(response);
+                break;
+    
+                case "recentsongs":
+                    if (registered) response = await recentsongs(id, command);
+                    message.channel.sendMessage(response);
+                break;
+    
+                case "topsongs":
+                    if (registered) response = await topsongs(id, command);
+                    message.channel.sendMessage(response);
+                break;
+    
+                case "register":
+                    if (registered) response = 'You are already registered.';
+                    else response = await register(revoltid, command[2]);
+                    message.channel.sendMessage(response)
+                break;
+
+                case "unregister":
+                    if (registered) response = await unregister(revoltid);
+                    message.channel.sendMessage(response);
+                break;
+
+                case "help":
+                    message.channel.sendMessage(
+                        `**commands**\n` +
+                        `${config.keyword} recentsong\n` +
+                        `${config.keyword} topsong\n` +
+                        `${config.keyword} recentsongs\n` +
+                        `${config.keyword} topsongs\n` +
+                        `${config.keyword} unregister`);
+                break;
+
+                default:
+                    message.channel.sendMessage(
+                        `Invalid command. \
+                        You can use *${config.keyword} help* to get a list of commands.`);
+                break;
             }
         }
-        else {
-            try {
-                switch (command[1]) {
-                    case "recentsong":
-                        response = await recentsong(id, command);
-                        message.channel.sendMessage(response);
-                    break;
-        
-                    case "topsong":
-                        response = await topsong(id, command);
-                        message.channel.sendMessage(response);
-                    break;
-        
-                    case "recentsongs":
-                        response = await recentsongs(id, command);
-                        message.channel.sendMessage(response);
-                    break;
-        
-                    case "topsongs":
-                        response = await topsongs(id, command);
-                        message.channel.sendMessage(response);
-                    break;
-        
-                    case "register":
-                        message.channel.sendMessage('You are already registered.')
-                    break;
-
-                    case "unregister":
-                        response = await unregister(revoltid);
-                        message.channel.sendMessage(response);
-                    break;
-
-                    case "help":
-                        message.channel.sendMessage(
-                            `**commands**\n` +
-                            `${config.keyword} recentsong\n` +
-                            `${config.keyword} topsong\n` +
-                            `${config.keyword} recentsongs\n` +
-                            `${config.keyword} topsongs` +
-                            `${config.keyword} unregister`);
-                    break;
-
-                    default:
-                        message.channel.sendMessage(
-                            `Invalid command. \
-                            You can use *${config.keyword} help* to get a list of commands.`);
-                    break;
-                }
-            }
-            catch (error) {
-                message.channel.sendMessage('Something went wrong.');
-            }
+        catch (error) {
+            message.channel.sendMessage('Something went wrong.');
         }
     }
 }
