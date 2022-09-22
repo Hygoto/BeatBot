@@ -28,13 +28,25 @@ async function messageRecieved(message) {
         const revoltid = message.author_id;
         let id;
 
-        id = (db.data.users.find((user) => user.revolt === revoltid) ?? {scoresaber: -1}).scoresaber
+        id = (db.data.users.find((user) => user.revolt === revoltid) ?? {scoresaber: -1}).scoresaber;
         let response;
         let registered = true;
-        if (id === -1) {
-            registered = false;
-            response = `You are not registered. \
-            You can register with ${config.keyword} register *scoresaberID*.`;
+        if (command.length > 3) {
+            if (command[3].charAt(0) === '<') {
+                const mentionedid = command[3].substr(2, 26);
+                id = (db.data.users.find((user) => user.revolt === mentionedid) ?? {scoresaber: -1}).scoresaber;
+                if (id === -1) {
+                    registered = false;
+                    response = 'This user is not registered.';
+                }
+            }  
+        }
+        else {
+            if (id === -1) {
+                registered = false;
+                response = `You are not registered. \
+                You can register with ${config.keyword} register *scoresaberID*.`;
+            }
         }
         try {
             switch (command[1]) {
