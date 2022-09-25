@@ -98,6 +98,10 @@ async function messageRecieved(message) {
                         `${config.keyword} unregister`);
                 break;
 
+                case "id":
+                    message.channel.sendMessage(id);
+                break;
+
                 default:
                     message.channel.sendMessage(
                         `Invalid command. \
