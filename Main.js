@@ -69,6 +69,11 @@ async function messageRecieved(message) {
                     if (registered) response = await topsongs(id, command);
                     message.channel.sendMessage(response);
                 break;
+
+                case "profile":
+                    if (registered) response = await profile(id);
+                    message.channel.sendMessage(response);
+                break;
     
                 case "register":
                     if (registered) response = 'You are already registered.';
@@ -88,6 +93,8 @@ async function messageRecieved(message) {
                         `${config.keyword} topsong\n` +
                         `${config.keyword} recentsongs\n` +
                         `${config.keyword} topsongs\n` +
+                        `${config.keyword} profile\n` +
+                        `${config.keyword} register *Scoresaber ID*\n` +
                         `${config.keyword} unregister`);
                 break;
 
@@ -214,6 +221,18 @@ async function topsongs(id, command) {
             `pp: ${score.playerScores[index].score.pp}`;
     }
     return response;
+}
+
+async function profile(id) {
+    const profile = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/full`);
+    return (
+        `### ${profile.name}\n` +
+        `pp: ${profile.pp}\n` +
+        `Rank: ${profile.rank} Global, ${profile.countryRank} in ${profile.country}\n` +
+        `Average Ranked Acc: ${profile.scoreStats.averageRankedAccuracy.toFixed(2)}%\n` +
+        `Play Count: ${profile.scoreStats.totalPlayCount} total, ${profile.scoreStats.rankedPlayCount} ranked\n` +
+        `Replays watched by others: ${profile.scoreStats.replaysWatched}`
+    );
 }
 
 async function register(revoltid, id) {
