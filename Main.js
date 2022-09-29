@@ -124,12 +124,13 @@ async function recentsong(id, command) {
     const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+hash);
     const diff = score.playerScores[0].leaderboard.difficulty.difficultyRaw.split(/_/);
     const diffPos = getDiffPos(hash, diff, map);
-    const weirdTimeFormat = new Date(score.playerScores[0].score.timeSet);
+    const diffColor = getDiffColor(map.versions[diffPos[0]].diffs[diffPos[1]].difficulty);
+    const isoTime = new Date(score.playerScores[0].score.timeSet);
     if (score.playerScores[0].leaderboard.ranked) {
         return (
-            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
             `Rank: ${score.playerScores[0].score.rank}\n` +
-            `Time set: <t:${weirdTimeFormat.getTime()/1000}:R>\n`+
+            `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
             `Score: ${score.playerScores[0].score.baseScore}\n` +
             `Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
             `Star Rating: ${score.playerScores[0].leaderboard.stars}★\n` +
@@ -138,9 +139,9 @@ async function recentsong(id, command) {
     }
     else {
         return (
-            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+            `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
             `Rank: ${score.playerScores[0].score.rank}\n` +
-            `Time set: <t:${weirdTimeFormat.getTime()/1000}:R>\n`+
+            `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
             `Score: ${score.playerScores[0].score.baseScore}\n` +
             `Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%`
         );
@@ -156,11 +157,12 @@ async function topsong(id, command) {
     const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+hash);
     const diff = score.playerScores[0].leaderboard.difficulty.difficultyRaw.split(/_/);
     const diffPos =  getDiffPos(hash, diff, map);
-    const weirdTimeFormat = new Date(score.playerScores[0].score.timeSet);
+    const diffColor = getDiffColor(map.versions[diffPos[0]].diffs[diffPos[1]].difficulty);
+    const isoTime = new Date(score.playerScores[0].score.timeSet);
     return (
-        `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+        `Song: [${score.playerScores[0].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
         `Rank: ${score.playerScores[0].score.rank}\n` +
-        `Time set: <t:${weirdTimeFormat.getTime()/1000}:R>\n`+
+        `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
         `Score: ${score.playerScores[0].score.baseScore}\n` +
         `Acc: ${(score.playerScores[0].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
         `Star Rating: ${score.playerScores[0].leaderboard.stars}★\n` +
@@ -179,12 +181,13 @@ async function recentsongs(id, command) {
         const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+hash);
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
         const diffPos = getDiffPos(hash, diff, map);
-        const weirdTimeFormat = new Date(score.playerScores[index].score.timeSet);
+        const diffColor = getDiffColor(map.versions[diffPos[0]].diffs[diffPos[1]].difficulty);
+        const isoTime = new Date(score.playerScores[index].score.timeSet);
         if (score.playerScores[index].leaderboard.ranked) {
             response += `\n` +
-                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
                 `Rank: ${score.playerScores[index].score.rank}\n` +
-                `Time set: <t:${weirdTimeFormat.getTime()/1000}:R>\n`+
+                `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
                 `Score: ${score.playerScores[index].score.baseScore}\n` +
                 `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
                 `Star Rating: ${score.playerScores[index].leaderboard.stars}★\n` +
@@ -192,9 +195,9 @@ async function recentsongs(id, command) {
         }
         else {
             response += `\n` +
-                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
                 `Rank: ${score.playerScores[index].score.rank}\n` +
-                `Time set: <t:${weirdTimeFormat.getTime()/1000}:R>\n`+
+                `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
                 `Score: ${score.playerScores[index].score.baseScore}\n` +
                 `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%`;
         }
@@ -213,12 +216,13 @@ async function topsongs(id, command) {
         const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+hash);
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
         const diffPos = getDiffPos(hash, diff, map);
-        const weirdTimeFormat = new Date(score.playerScores[index].score.timeSet);
+        const diffColor = getDiffColor(map.versions[diffPos[0]].diffs[diffPos[1]].difficulty);
+        const isoTime = new Date(score.playerScores[index].score.timeSet);
         response +=
             `\n` +
-            `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  (${diff[1]})\n` +
+            `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
             `Rank: ${score.playerScores[index].score.rank}\n` +
-            `Time set: <t:${weirdTimeFormat.getTime()/1000}:R>\n`+
+            `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
             `Score: ${score.playerScores[index].score.baseScore}\n` +
             `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
             `Star Rating: ${score.playerScores[index].leaderboard.stars}★\n` +
@@ -270,6 +274,25 @@ function getDiffPos(hash, diff, map) {
         (value) => (value.difficulty === diff[1] && `Solo${value.characteristic}` === diff[2])
     );
     return diffPos;
+}
+
+function getDiffColor(diff) {
+    switch (diff) {
+        case 'Easy':
+            return '#3cb371';
+    
+        case 'Normal':
+            return '#59b0f4';
+
+        case 'Hard':
+            return '#ff6347';
+
+        case 'Expert':
+            return '#bf2a42';
+
+        case 'ExpertPlus':
+            return '#8f48db';
+    }
 }
 
 async function fetchJSONfrom(url) {
