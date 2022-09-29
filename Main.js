@@ -176,30 +176,31 @@ async function recentsongs(id, command) {
     if (command.length > 2) {page = command[2];}
     else {page = 1;};
     const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=8&sort=recent&page=${page}&withMetadata=false`);
+    let hash = Array(score.playerScores[0].leaderboard.songHash, score.playerScores[1].leaderboard.songHash, score.playerScores[2].leaderboard.songHash, score.playerScores[3].leaderboard.songHash, score.playerScores[4].leaderboard.songHash, score.playerScores[5].leaderboard.songHash, score.playerScores[6].leaderboard.songHash, score.playerScores[7].leaderboard.songHash);
+    hash.forEach((element, index) => {hash[index] = element.toLowerCase()});
+    const map = await fetchJSONfrom(`https://api.beatsaver.com/maps/hash/${hash[0]},${hash[1]},${hash[2]},${hash[3]},${hash[4]},${hash[5]},${hash[6]},${hash[7]}`);
     for (let index = 0; index < 8; index++) {
-        const hash = score.playerScores[index].leaderboard.songHash;
-        const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+hash);
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
-        const diffPos = getDiffPos(hash, diff, map);
-        const diffColor = getDiffColor(map.versions[diffPos[0]].diffs[diffPos[1]].difficulty);
+        const diffPos = getDiffPos(hash[index], diff, map[hash[index]]);
+        const diffColor = getDiffColor(map[hash[index]].versions[diffPos[0]].diffs[diffPos[1]].difficulty);
         const isoTime = new Date(score.playerScores[index].score.timeSet);
         if (score.playerScores[index].leaderboard.ranked) {
             response += `\n` +
-                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
+                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map[hash[index]].id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
                 `Rank: ${score.playerScores[index].score.rank}\n` +
                 `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
                 `Score: ${score.playerScores[index].score.baseScore}\n` +
-                `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
+                `Acc: ${(score.playerScores[index].score.baseScore/map[hash[index]].versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
                 `Star Rating: ${score.playerScores[index].leaderboard.stars}★\n` +
                 `pp: ${score.playerScores[index].score.pp}`;
         }
         else {
             response += `\n` +
-                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
+                `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map[hash[index]].id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
                 `Rank: ${score.playerScores[index].score.rank}\n` +
                 `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
                 `Score: ${score.playerScores[index].score.baseScore}\n` +
-                `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%`;
+                `Acc: ${(score.playerScores[index].score.baseScore/map[hash[index]].versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%`;
         }
     }
     return response;
@@ -211,20 +212,21 @@ async function topsongs(id, command) {
     if (command.length > 2) {page = command[2];}
     else {page = 1;};
     const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=8&sort=top&page=${page}&withMetadata=false`);
+    let hash = Array(score.playerScores[0].leaderboard.songHash, score.playerScores[1].leaderboard.songHash, score.playerScores[2].leaderboard.songHash, score.playerScores[3].leaderboard.songHash, score.playerScores[4].leaderboard.songHash, score.playerScores[5].leaderboard.songHash, score.playerScores[6].leaderboard.songHash, score.playerScores[7].leaderboard.songHash);
+    hash.forEach((element, index) => {hash[index] = element.toLowerCase()});
+    const map = await fetchJSONfrom(`https://api.beatsaver.com/maps/hash/${hash[0]},${hash[1]},${hash[2]},${hash[3]},${hash[4]},${hash[5]},${hash[6]},${hash[7]}`);
     for (let index = 0; index < 8; index++) {
-        const hash = score.playerScores[index].leaderboard.songHash;
-        const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+hash);
         const diff = score.playerScores[index].leaderboard.difficulty.difficultyRaw.split(/_/);
-        const diffPos = getDiffPos(hash, diff, map);
-        const diffColor = getDiffColor(map.versions[diffPos[0]].diffs[diffPos[1]].difficulty);
+        const diffPos = getDiffPos(hash[index], diff, map[hash[index]]);
+        const diffColor = getDiffColor(map[hash[index]].versions[diffPos[0]].diffs[diffPos[1]].difficulty);
         const isoTime = new Date(score.playerScores[index].score.timeSet);
         response +=
             `\n` +
-            `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map.id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
+            `Song: [${score.playerScores[index].leaderboard.songName}](<https://beatsaver.com/maps/${map[hash[index]].id}>)  $\\color{${diffColor}}\\textsf{${diff[1]}}$\n` +
             `Rank: ${score.playerScores[index].score.rank}\n` +
             `Time set: <t:${isoTime.getTime()/1000}:R>\n`+
             `Score: ${score.playerScores[index].score.baseScore}\n` +
-            `Acc: ${(score.playerScores[index].score.baseScore/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
+            `Acc: ${(score.playerScores[index].score.baseScore/map[hash[index]].versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2)}%\n` +
             `Star Rating: ${score.playerScores[index].leaderboard.stars}★\n` +
             `pp: ${score.playerScores[index].score.pp}`;
     }
