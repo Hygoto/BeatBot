@@ -1,6 +1,7 @@
 import {Client} from "revolt.js";
 import {Low, JSONFile} from 'lowdb';
 import config from './config.json' assert {type:'json'};
+import axios from "axios";
 
 let client = new Client();
 const db = new Low(new JSONFile('./db.json'));
@@ -14,6 +15,7 @@ client.on("ready", async() =>
     console.info(`Logged in as ${client.user.username}!`),
 );
 client.on("message", messageRecieved);
+if (config.status) setStatus(`${config.keyword} help`, 'Online');
 
 async function messageRecieved(message) {
     let command;
@@ -300,6 +302,20 @@ function getDiffColor(diff) {
 async function fetchJSONfrom(url) {
     const response = await fetch(url);
     return response.json();
+}
+
+async function setStatus(text, presence) {
+    await axios.patch(
+        `${client.apiURL}/users/@me`,
+        {
+            status: { text, presence }
+        },
+        {
+            headers: {
+                'x-bot-token': config.botToken
+            }
+        }
+    );
 }
 
 client.loginBot(config.botToken);
