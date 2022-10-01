@@ -54,22 +54,22 @@ async function messageRecieved(message) {
         try {
             switch (command[1]) {
                 case "recentsong":
-                    if (registered) response = await recentsong(id, command);
+                    if (registered) response = await song(id, command, 'recent');
                     message.channel.sendMessage(response);
                 break;
     
                 case "topsong":
-                    if (registered) response = await topsong(id, command);
+                    if (registered) response = await song(id, command, 'top');
                     message.channel.sendMessage(response);
                 break;
     
                 case "recentsongs":
-                    if (registered) response = await recentsongs(id, command);
+                    if (registered) response = await songs(id, command, 'recent');
                     message.channel.sendMessage(response);
                 break;
     
                 case "topsongs":
-                    if (registered) response = await topsongs(id, command);
+                    if (registered) response = await songs(id, command, 'top');
                     message.channel.sendMessage(response);
                 break;
 
@@ -118,53 +118,22 @@ async function messageRecieved(message) {
     }
 }
 
-async function recentsong(id, command) {
-
+async function song(id, command, type) {
     let page;
     if (command.length > 2) {page = command[2];}
     else {page = 1;};
-    const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=1&sort=recent&page=${page}&withMetadata=false`);
+    const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=1&sort=${type}&page=${page}&withMetadata=false`);
     const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+score.playerScores[0].leaderboard.songHash);
     const data = new ScoreData(score.playerScores[0], map);
     return data.response();
 }
 
-async function topsong(id, command) {
+async function songs(id, command, type) {
     let page;
+    let response = `### ${type} scores\n`;
     if (command.length > 2) {page = command[2];}
     else {page = 1;};
-    const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=1&sort=top&page=${page}&withMetadata=false`);
-    const map = await fetchJSONfrom('https://api.beatsaver.com/maps/hash/'+score.playerScores[0].leaderboard.songHash);
-    const data = new ScoreData(score.playerScores[0], map);
-    return data.response();
-}
-
-async function recentsongs(id, command) {
-    let page;
-    let response = '### recent scores\n';
-    if (command.length > 2) {page = command[2];}
-    else {page = 1;};
-    const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=8&sort=recent&page=${page}&withMetadata=false`);
-    let hash = Array(score.playerScores[0].leaderboard.songHash, score.playerScores[1].leaderboard.songHash, score.playerScores[2].leaderboard.songHash, score.playerScores[3].leaderboard.songHash, score.playerScores[4].leaderboard.songHash, score.playerScores[5].leaderboard.songHash, score.playerScores[6].leaderboard.songHash, score.playerScores[7].leaderboard.songHash);
-    hash.forEach((element, index) => {hash[index] = element.toLowerCase()});
-    const map = await fetchJSONfrom(`https://api.beatsaver.com/maps/hash/${hash[0]},${hash[1]},${hash[2]},${hash[3]},${hash[4]},${hash[5]},${hash[6]},${hash[7]}`);
-    let data = Array(8);
-    for (let index = 0; index < 8; index++) {
-        data[index] = new ScoreData(score.playerScores[index], map[hash[index]]); 
-    }
-    for (let index = 0; index < 7; index++) {
-        response += data[index].response() + '\n';
-    }
-    response += data[7].response();
-    return response;
-}
-
-async function topsongs(id, command) {
-    let page;
-    let response = '### top scores\n';
-    if (command.length > 2) {page = command[2];}
-    else {page = 1;};
-    const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=8&sort=top&page=${page}&withMetadata=false`);
+    const score = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/scores?limit=8&sort=${type}&page=${page}&withMetadata=false`);
     let hash = Array(score.playerScores[0].leaderboard.songHash, score.playerScores[1].leaderboard.songHash, score.playerScores[2].leaderboard.songHash, score.playerScores[3].leaderboard.songHash, score.playerScores[4].leaderboard.songHash, score.playerScores[5].leaderboard.songHash, score.playerScores[6].leaderboard.songHash, score.playerScores[7].leaderboard.songHash);
     hash.forEach((element, index) => {hash[index] = element.toLowerCase()});
     const map = await fetchJSONfrom(`https://api.beatsaver.com/maps/hash/${hash[0]},${hash[1]},${hash[2]},${hash[3]},${hash[4]},${hash[5]},${hash[6]},${hash[7]}`);
