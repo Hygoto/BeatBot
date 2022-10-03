@@ -81,7 +81,7 @@ async function messageRecieved(message) {
                 case "register":
                     if (registered) response = 'You are already registered.';
                     else response = await register(revoltid, command[2]);
-                    message.channel.sendMessage(response)
+                    message.channel.sendMessage(response);
                 break;
 
                 case "unregister":
@@ -149,25 +149,54 @@ async function songs(id, command, type) {
 }
 
 async function profile(id) {
-    const profile = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/full`);
-    return (
-        `### ${profile.name}\n` +
-        `pp: ${profile.pp}\n` +
-        `Rank: ${profile.rank} Global, ${profile.countryRank} in ${profile.country}\n` +
-        `Average Ranked Acc: ${profile.scoreStats.averageRankedAccuracy.toFixed(2)}%\n` +
-        `Play Count: ${profile.scoreStats.totalPlayCount} total, ${profile.scoreStats.rankedPlayCount} ranked\n` +
-        `Replays watched by others: ${profile.scoreStats.replaysWatched}`
-    );
+    const scoresaber = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/full`);
+    const beatleader = await fetchJSONfrom(`https://api.beatleader.xyz/player/${id}?stats=true`);
+    let response = '';
+    if (scoresaber.id === id) {
+        response += (
+            `### [ScoreSaber](<https://scoresaber.com/u/${id}>)\n` +
+            `pp: ${scoresaber.pp}\n` +
+            `Rank: ${scoresaber.rank} Global, ${scoresaber.countryRank} in ${scoresaber.country}\n` +
+            `Average Ranked Acc: ${scoresaber.scoreStats.averageRankedAccuracy.toFixed(2)}%\n` +
+            `Play Count: ${scoresaber.scoreStats.totalPlayCount} total, ${scoresaber.scoreStats.rankedPlayCount} ranked\n` +
+            `Replays watched by others: ${scoresaber.scoreStats.replaysWatched}`
+        );
+        if (beatleader.id === id) response += '\n';
+    }
+    if (beatleader.id === id) {
+        response += (
+            `### [BeatLeader](<https://beatleader.xyz/u/${id}>)\n` +
+            `pp: ${beatleader.pp}\n` +
+            `Rank: ${beatleader.rank} Global, ${beatleader.countryRank} in ${beatleader.country}\n` +
+            `Average Ranked Acc: ${(beatleader.scoreStats.averageRankedAccuracy*100).toFixed(2)}%\n` +
+            `Play Count: ${beatleader.scoreStats.totalPlayCount} total, ${beatleader.scoreStats.rankedPlayCount} ranked\n` +
+            `Replays watched by others: ${beatleader.scoreStats.replaysWatched}`
+        );
+    }
+    return response;
 }
 
 async function register(revoltid, id) {
     try {
         db.read();
-        const player = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/basic`);
-        if (player.id === id) {
+        const scoresaber = await fetchJSONfrom(`https://scoresaber.com/api/player/${id}/basic`);
+        let valid = false;
+        let name;
+        if (scoresaber.id === id) {
+            valid = true;
+            name = scoresaber.name;
+        }
+        else {
+            const beatleader = await fetchJSONfrom(`https://api.beatleader.xyz/player/${id}?stats=false`);
+            if (beatleader.id === id) {
+                valid = true;
+                name = beatleader.name;
+            }
+        }
+        if (valid) {
             db.data.users.push({revolt: revoltid, scoresaber: id});
             db.write();
-            return `You are now registered as ${player.name}`; 
+            return `You are now registered as ${name}`; 
         }
         else return 'Invalid profile';
     }
