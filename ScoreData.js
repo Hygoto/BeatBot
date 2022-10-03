@@ -10,6 +10,7 @@ export default class ScoreData {
     ranked;
     starRating;
     pp;
+    ppWeighted;
 
     constructor(score, map) {
         this.hash = score.leaderboard.songHash.toLowerCase();
@@ -26,6 +27,7 @@ export default class ScoreData {
         if (this.ranked) {
             this.starRating = score.leaderboard.stars;
             this.pp = score.score.pp;
+            this.ppWeighted = (this.pp*score.score.weight).toFixed(2);
         }
     }
 
@@ -40,7 +42,7 @@ export default class ScoreData {
             );
         if (this.ranked) content += (
             `\nStar Rating: ${this.starRating}★\n` +
-            `pp: ${this.pp}`
+            `pp: ${this.pp} (${this.ppWeighted})`
         );
         return content;
     }
