@@ -29,12 +29,14 @@ export default class ScoreData {
             this.pp = score.score.pp;
             this.ppWeighted = (this.pp*score.score.weight).toFixed(2);
         }
+        if (this.diff[2] === 'SoloStandard') this.diff[2] = '';
+        else this.diff[2] = this.diff[2].substr(4) + ' ';
     }
 
     response() {
         const diffColor = this.getDiffColor(this.diff[1])
         let content = (
-            `Song: [${this.song}](<https://beatsaver.com/maps/${this.id}>)  $\\color{${diffColor}}\\textsf{${this.diff[1]}}$\n` +
+            `Song: [${this.song}](<https://beatsaver.com/maps/${this.id}>)  ${this.diff[2]}$\\color{${diffColor}}\\textsf{${this.diff[1]}}$\n` +
             `Rank: ${this.rank}\n` +
             `Time set: <t:${this.timeSet}:R>\n`+
             `Score: ${this.score}\n` +
