@@ -1,5 +1,6 @@
 {
     "botToken": "put your bot token here",
     "keyword": "ru",
+    "standardSource": "scoresaber",
     "status": true
 }
