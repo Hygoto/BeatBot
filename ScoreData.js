@@ -6,6 +6,7 @@ export default class ScoreData {
     rank;
     score;
     acc;
+    misses;
     scoreid;
     timeSet;
     ranked;
@@ -23,6 +24,8 @@ export default class ScoreData {
             this.score = score.score.baseScore;
             const diffPos = this.getDiffPos(map);
             this.acc = (this.score/map.versions[diffPos[0]].diffs[diffPos[1]].maxScore*100).toFixed(2);
+            if (score.score.fullCombo) this.misses = '$\\color{#23d160}\\textsf{FC}$';
+            else this.misses = score.score.badCuts + score.score.missedNotes + ':x:';
             const isoTime = new Date(score.score.timeSet);
             this.timeSet = isoTime.getTime()/1000;
             this.ranked = score.leaderboard.ranked;
@@ -41,6 +44,8 @@ export default class ScoreData {
             this.rank = score.rank;
             this.score = score.baseScore;
             this.acc = (this.score/score.leaderboard.difficulty.maxScore*100).toFixed(2);
+            if (score.fullCombo) this.misses = '$\\color{#fcfc01}\\textsf{FC}$';
+            else this.misses = score.badCuts + score.missedNotes + score.bombCuts + score.wallsHit + ':x:';
             this.scoreid = score.id;
             this.timeSet = score.timeset;
             if (score.leaderboard.song.difficulties[0].status > 1) {
@@ -59,7 +64,8 @@ export default class ScoreData {
             `#${this.rank}\n` +
             `set <t:${this.timeSet}:R>\n`+
             `Score: ${this.score}\n` +
-            `${this.acc}%`
+            `${this.acc}%\n` +
+            `${this.misses}`
         );
         if (this.ranked) content += (
             `\n${this.starRating}★\n` +
