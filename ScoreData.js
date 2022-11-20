@@ -31,7 +31,7 @@ export default class ScoreData {
             this.ranked = score.leaderboard.ranked;
             if (this.ranked) {
                 this.starRating = score.leaderboard.stars;
-                this.pp = score.score.pp;
+                this.pp = score.score.pp.toFixed(2);
                 this.ppWeighted = (this.pp*score.score.weight).toFixed(2);
             }
             if (this.diff[2] === 'SoloStandard') this.diff[2] = '';
@@ -57,16 +57,18 @@ export default class ScoreData {
         }
     }
 
-    response() {
+    response(includeScore) {
         const diffColor = this.getDiffColor(this.diff[1])
         let content = (
             `[${this.song}](<https://beatsaver.com/maps/${this.id}>) ${this.diff[2]}$\\color{${diffColor}}\\textsf{${this.diff[1]}}$\n` +
             `#${this.rank}\n` +
-            `set <t:${this.timeSet}:R>\n`+
-            `Score: ${this.score}\n` +
-            `${this.acc}%\n` +
-            `${this.misses}`
+            `set <t:${this.timeSet}:R>\n`
         );
+            if (includeScore) this.response += `Score: ${this.score}\n`;
+            this.response += (
+                `${this.acc}%\n` +
+                `${this.misses}`
+            );
         if (this.ranked) content += (
             `\n${this.starRating}★\n` +
             `${this.pp}pp (${this.ppWeighted}pp)`

@@ -136,7 +136,7 @@ async function song(id, command, type, channel) {
             embeds: [{
                 colour: '#fedf15',
                 title: `${type} ScoreSaber score`,
-                description: data.response()
+                description: data.response(true)
             }]
         });
         }
@@ -146,7 +146,7 @@ async function song(id, command, type, channel) {
                 embeds: [{
                     colour: '#f80092',
                     title: `${type} BeatLeader score`,
-                    description: data.response()
+                    description: data.response(true)
                 }]
             });
         }
@@ -158,7 +158,7 @@ async function song(id, command, type, channel) {
             embeds: [{
                 colour: '#fedf15',
                 title: `${type} ScoreSaber score`,
-                description: data.response()
+                description: data.response(true)
             }]
         });
     }
@@ -168,7 +168,7 @@ async function song(id, command, type, channel) {
             embeds: [{
                 colour: '#f80092',
                 title: `${type} BeatLeader score`,
-                description: data.response()
+                description: data.response(true)
             }]
         });
     }
@@ -200,7 +200,7 @@ async function songs(id, command, type, channel) {
             let response = '';
             for (let index = 0; index < data.length; index++) {
                 data[index] = new ScoreData(scoresaber.playerScores[index], map[hash[index]]); 
-                response += '\n' + data[index].response();
+                response += '\n' + data[index].response(false);
             }
             response = response.substr(1);
             selection[1].edit({
@@ -216,7 +216,7 @@ async function songs(id, command, type, channel) {
             let response = '';
             for (let index = 0; index < data.length; index++) {
                 data[index] = new ScoreData(beatleader.data[index], undefined); 
-                response += '\n' + data[index].response();
+                response += '\n' + data[index].response(false);
             }
             response = response.substr(1);
             selection[1].edit({
@@ -243,7 +243,7 @@ async function songs(id, command, type, channel) {
         let response = '';
         for (let index = 0; index < data.length; index++) {
             data[index] = new ScoreData(scoresaber.playerScores[index], map[hash[index]]); 
-            response += '\n' + data[index].response();
+            response += '\n' + data[index].response(false);
         }
         response = response.substr(1);
         channel.sendMessage({
@@ -259,7 +259,7 @@ async function songs(id, command, type, channel) {
         let response = '';
         for (let index = 0; index < data.length; index++) {
             data[index] = new ScoreData(beatleader.data[index], undefined); 
-            response += '\n' + data[index].response();
+            response += '\n' + data[index].response(false);
         }
         response = response.substr(1);
         channel.sendMessage({
