@@ -64,11 +64,11 @@ export default class ScoreData {
             `#${this.rank}\n` +
             `set <t:${this.timeSet}:R>\n`
         );
-            if (includeScore) this.response += `Score: ${this.score}\n`;
-            this.response += (
-                `${this.acc}%\n` +
-                `${this.misses}`
-            );
+        if (includeScore) content += `Score: ${this.score}\n`;
+        content += (
+            `${this.acc}%\n` +
+            this.misses
+        );
         if (this.ranked) content += (
             `\n${this.starRating}★\n` +
             `${this.pp}pp (${this.ppWeighted}pp)`
